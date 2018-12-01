@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ccalvarez/api-time-tracking/issues"
   },
-  "homepage": "https://github.com/ccalvarez/api-time-tracking#readme"
+  "homepage": "https://github.com/ccalvarez/api-time-tracking#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }
