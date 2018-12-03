@@ -1,2 +1,2 @@
 # api-time-tracking
-Express.js RESTfull API for time tracking
+Express.js RESTful API for time tracking
