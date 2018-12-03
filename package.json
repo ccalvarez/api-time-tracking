@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ccalvarez/api-time-tracking#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4"
   },
   "devDependencies": {
