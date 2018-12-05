@@ -12,7 +12,7 @@ router.post('/', (req, res, next) => {
         res.status(201).json(user);
       }
     })
-    .catch(err => res.status(500).send(`Se encontró un error: ${err}`));
+    .catch(err => res.status(500).json(`Se encontró un error: ${err}`));
 });
 
 router.get('/', (req, res, next) => {
