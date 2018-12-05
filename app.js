@@ -18,7 +18,7 @@ app.use('/systems', systemsRoutes);
 mongoose
   .connect(
     process.env.DATABASE,
-    { useNewUrlParser: true }
+    { useCreateIndex: true, useNewUrlParser: true }
   )
   .then(result => {
     app.listen(5000, () => {
