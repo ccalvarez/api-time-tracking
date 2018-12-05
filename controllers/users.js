@@ -1,26 +1,33 @@
 const bcrypt = require('bcryptjs');
+const { validationResult } = require('express-validator/check');
 
 const UserModel = require('../models/user');
 
-exports.createUser = (email, password) => {
-  return new Promise((resolve, reject) => {
-    try {
-      bcrypt.hash(password, 12).then(hashedPassword => {
-        const newUser = UserModel({
-          email: email,
-          password: hashedPassword,
-        });
+exports.createUser = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      message: 'Validation failed, entered data is incorrect',
+      errors: errors.array(),
+    });
+  }
 
-        newUser.save(err => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(newUser);
-          }
-        });
+  try {
+    bcrypt.hash(req.body.password.trim(), 12).then(hashedPassword => {
+      const user = UserModel({
+        email: req.body.email.trim(),
+        password: hashedPassword,
       });
-    } catch (ex) {
-      reject(ex);
-    }
-  });
+
+      user.save(err => {
+        if (err) {
+          res.status(500).json(`Se encontró un error: ${err}`);
+        } else {
+          res.status(201).json(user);
+        }
+      });
+    });
+  } catch (err) {
+    res.status(500).json(`Se encontró un error: ${err}`);
+  }
 };
