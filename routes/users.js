@@ -1,6 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator/check');
-const { sanitizeBody } = require('express-validator/filter');
+// todo: sanitizar body
+// const { sanitizeBody } = require('express-validator/filter');
 
 const usersController = require('../controllers/users');
 

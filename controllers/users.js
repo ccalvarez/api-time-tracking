@@ -6,10 +6,9 @@ const UserModel = require('../models/user');
 exports.createUser = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(422).json({
-      message: 'Validation failed, entered data is incorrect',
-      errors: errors.array(),
-    });
+    const error = new Error('Validation failed, entered data is incorrect');
+    error.statusCode = 422;
+    throw error;
   }
 
   try {
@@ -19,15 +18,22 @@ exports.createUser = (req, res, next) => {
         password: hashedPassword,
       });
 
-      user.save(err => {
-        if (err) {
-          res.status(500).json(`Se encontró un error: ${err}`);
-        } else {
-          res.status(201).json(user);
-        }
-      });
+      user
+        .save()
+        .then(result => {
+          res.status(201).json(result);
+        })
+        .catch(err => {
+          if (!err.statusCode) {
+            err.statusCode = 500;
+          }
+          next(err);
+        });
     });
   } catch (err) {
-    res.status(500).json(`Se encontró un error: ${err}`);
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
   }
 };
