@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const idValidator = require('mongoose-id-validator');
 
 const systemSchema = new mongoose.Schema(
   {
@@ -12,5 +13,8 @@ const systemSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Valida que el user provisto exista en la colección users
+systemSchema.plugin(idValidator);
 
 module.exports = mongoose.model('System', systemSchema);
