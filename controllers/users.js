@@ -3,7 +3,7 @@ const { validationResult } = require('express-validator/check');
 
 const UserModel = require('../models/user');
 
-exports.createUser = (req, res, next) => {
+exports.signUp = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed, entered data is incorrect');
@@ -21,7 +21,7 @@ exports.createUser = (req, res, next) => {
       user
         .save()
         .then(result => {
-          res.status(201).json(result);
+          res.status(201).send();
         })
         .catch(err => {
           if (!err.statusCode) {

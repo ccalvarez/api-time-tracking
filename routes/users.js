@@ -19,7 +19,7 @@ router.post(
       .trim()
       .isLength({ min: 5 }),
   ],
-  usersController.createUser
+  usersController.signUp
 );
 
 // GET /users
