@@ -26,7 +26,12 @@ exports.signUp = (req, res, next) => {
         })
         .catch(err => {
           if (!err.statusCode) {
-            err.statusCode = 500;
+            if (err.message.toLowerCase().includes('duplicate')) {
+              err.statusCode = 409;
+              err.message = 'Ya existe un usuario registrado con ese Email';
+            } else {
+              err.statusCode = 500;
+            }
           }
           next(err);
         });
