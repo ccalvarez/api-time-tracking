@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const usersRoutes = require('./routes/users');
 const systemsRoutes = require('./routes/systems');
+const tasksRoutes = require('./routes/tasks');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use((req, res, next) => {
 
 app.use('/users', usersRoutes);
 app.use('/systems', systemsRoutes);
+app.use('/tasks', tasksRoutes);
 
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
