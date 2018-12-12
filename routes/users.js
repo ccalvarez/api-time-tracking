@@ -12,11 +12,14 @@ router.post(
   '/',
   [
     body('email')
-      .isEmail().withMessage('Email inválido')
+      .trim()
+      .isEmail()
+      .withMessage('Email inválido')
       .normalizeEmail(),
     body('password')
       .trim()
-      .isLength({ min: 5 }).withMessage('Password inválido'),
+      .isLength({ min: 5 })
+      .withMessage('Password inválido'),
   ],
   usersController.signUp
 );
