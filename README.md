@@ -1,5 +1,5 @@
 # api-time-tracking
-> Express.js RESTful API for time tracking.
+> Express.js RESTful API for logging and reporting daily tasks.
 
 ## Features
 
