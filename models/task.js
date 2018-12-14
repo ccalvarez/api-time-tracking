@@ -4,10 +4,10 @@ const idValidator = require('mongoose-id-validator');
 const taskSchema = new mongoose.Schema(
   {
     description: { type: String, required: true },
-    logTimes: { type: Array }, // { start: datetime, end: datetime }
+    intervals: { type: Array }, // { start: datetime, end: datetime }
     delayReason: { type: String },
     comments: { type: String },
-    finished: { type: Boolean, required: true, default: false },
+    state: { type: String, required: true }, // pending, running, paused, finished
     system: {
       type: mongoose.Schema.Types.ObjectId,
       required: false,

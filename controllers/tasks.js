@@ -14,9 +14,10 @@ exports.createTask = (req, res, next) => {
   try {
     const task = TaskModel({
       description: req.body.description,
-      logTimes: req.body.start ? { start: new Date(), end: null } : [],
+      intervals: req.body.start ? { start: new Date(), end: null } : [],
       delayReason: req.body.delayReason,
       comments: req.body.comments,
+      state: req.body.start ? 'running' : 'pending',
       system: req.body.systemId,
       user: req.body.userId,
     });
