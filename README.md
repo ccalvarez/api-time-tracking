@@ -14,7 +14,7 @@
 ## Important
 
 This application uses the [Dotenv](https://www.npmjs.com/package/dotenv) npm package to load environment variables.
-To run the application, rename `.env.rename` file to `.env` and edit it to set proper values for the environment variables.
+To run the application, copy the `.env.rename` file to `.env` and edit the latter to set appropiate values for the environment variables.
 
 ## License
 [MIT](https://github.com/ccalvarez/api-time-tracking/blob/master/LICENSE)
