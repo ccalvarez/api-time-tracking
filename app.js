@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 
   res.setHeader(
     'Access-Control-Allow-Methods',
-    'GET, POST, PUT, PATCH, DELETE'
+    'GET, POST, PUT, PATCH, DELETE',
   );
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
@@ -41,11 +41,11 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(
     process.env.DATABASE,
-    { useCreateIndex: true, useNewUrlParser: true }
+    { useCreateIndex: true, useNewUrlParser: true },
   )
   .then(result => {
-    app.listen(5000, () => {
-      console.log('Time Tracking API listening on port 5000...');
+    app.listen(process.env.PORT, () => {
+      console.log(`Time Tracking API listening on port ${process.env.PORT}...`);
     });
   })
   .catch(err => {

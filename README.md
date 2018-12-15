@@ -14,7 +14,7 @@
 ## Important
 
 This application uses the [Dotenv](https://www.npmjs.com/package/dotenv) npm package to load environment variables.
-To run the application, copy the `.env.rename` file to `.env` and edit the latter to set appropriate values for the environment variables.
+To run the application, copy the `.env.copy` file as `.env` and edit the latter to set appropriate values for the environment variables.
 
 ## Project setup
 ```
