@@ -9,7 +9,7 @@
 
 ## Hosting
 
-- [Heroku](https://www.heroku.com/)
+- [Netlify](https://www.netlify.com/) with [Lambda Functions](https://www.netlify.com/docs/functions/) :fire:
 
 ## Important
 
