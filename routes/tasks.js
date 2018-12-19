@@ -19,6 +19,14 @@ router.post(
       .withMessage('Descripción de la tarea es requerida'),
     body('delayReason').trim(),
     body('comments').trim(),
+    body('includeInReport')
+      .not()
+      .isEmpty()
+      .withMessage('Indicador de incluir en el reporte mensual es requerido')
+      .isBoolean()
+      .withMessage(
+        'Indicador de incluir en el reporte mensual debe ser Boolean'
+      ),
     body('projectId')
       .trim()
       .not()

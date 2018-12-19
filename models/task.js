@@ -10,12 +10,18 @@ const taskSchema = new mongoose.Schema(
     state: {
       type: String,
       required: true,
+      index: true,
       trim: true,
       // enum: ['pending', 'running', 'paused', 'finished'],
       enum: {
         values: 'pending running paused finished'.split(' '),
         message: 'Estado de la tarea no es válido',
       },
+    },
+    includeInReport: {
+      type: Boolean,
+      required: true,
+      default: true,
     },
     project: {
       type: mongoose.Schema.Types.ObjectId,
@@ -30,6 +36,7 @@ const taskSchema = new mongoose.Schema(
       ref: 'User',
     },
   },
+
   { timestamps: true }
 );
 

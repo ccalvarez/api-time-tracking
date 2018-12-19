@@ -18,6 +18,7 @@ exports.createTask = (req, res, next) => {
       delayReason: req.body.delayReason,
       comments: req.body.comments,
       state: req.body.start ? 'running' : 'pending',
+      includeInReport: req.body.includeInReport,
       project: req.body.projectId,
       user: req.body.userId,
     });
