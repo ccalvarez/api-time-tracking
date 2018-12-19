@@ -18,7 +18,7 @@ exports.createTask = (req, res, next) => {
       delayReason: req.body.delayReason,
       comments: req.body.comments,
       state: req.body.start ? 'running' : 'pending',
-      system: req.body.systemId,
+      project: req.body.projectId,
       user: req.body.userId,
     });
 
@@ -70,7 +70,7 @@ exports.editTask = (req, res, next) => {
               const lastIntervalStart = Math.max(
                 ...result.intervals.map(interval => {
                   return interval.start;
-                }),
+                })
               );
 
               TaskModel.update(
@@ -79,7 +79,7 @@ exports.editTask = (req, res, next) => {
                   'intervals.start': new Date(lastIntervalStart),
                 },
                 { $set: { state: 'paused', 'intervals.$.end': new Date() } },
-                { runValidators: true },
+                { runValidators: true }
               )
                 .then(updated => {
                   res.status(200).send();

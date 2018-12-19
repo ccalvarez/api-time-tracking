@@ -1,8 +1,8 @@
 const { validationResult } = require('express-validator/check');
 
-const SystemModel = require('../models/system');
+const ProjectModel = require('../models/project');
 
-exports.createSystem = (req, res, next) => {
+exports.createProject = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed, entered data is incorrect');
@@ -11,12 +11,12 @@ exports.createSystem = (req, res, next) => {
   }
 
   try {
-    const system = SystemModel({
+    const project = ProjectModel({
       name: req.body.name.trim(),
       user: req.body.userId.trim(),
     });
 
-    system
+    project
       .save()
       .then(result => {
         res.status(201).json(result);

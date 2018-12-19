@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const usersRoutes = require('./routes/users');
-const systemsRoutes = require('./routes/systems');
+const projectsRoutes = require('./routes/projects');
 const tasksRoutes = require('./routes/tasks');
 
 const app = express();
@@ -24,14 +24,14 @@ app.use((req, res, next) => {
 
   res.setHeader(
     'Access-Control-Allow-Methods',
-    'GET, POST, PUT, PATCH, DELETE',
+    'GET, POST, PUT, PATCH, DELETE'
   );
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
 
 app.use('/users', usersRoutes);
-app.use('/systems', systemsRoutes);
+app.use('/projects', projectsRoutes);
 app.use('/tasks', tasksRoutes);
 
 app.use((error, req, res, next) => {
@@ -43,7 +43,7 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(
     process.env.DATABASE,
-    { useCreateIndex: true, useNewUrlParser: true },
+    { useCreateIndex: true, useNewUrlParser: true }
   )
   .then(result => {
     app.listen(process.env.PORT, () => {

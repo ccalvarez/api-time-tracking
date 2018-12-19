@@ -3,11 +3,11 @@ const { body } = require('express-validator/check');
 // todo: sanitizar body
 // const { sanitizeBody } = require('express-validator/filter');
 
-const systemsController = require('../controllers/systems');
+const projectsController = require('../controllers/projects');
 
 const router = express.Router();
 
-// POST /systems
+// POST /projects
 router.post(
   '/',
   [
@@ -20,7 +20,7 @@ router.post(
       .not()
       .isEmpty(),
   ],
-  systemsController.createSystem
+  projectsController.createProject
 );
 
 module.exports = router;

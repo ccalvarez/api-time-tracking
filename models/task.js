@@ -17,11 +17,11 @@ const taskSchema = new mongoose.Schema(
         message: 'Estado de la tarea no es válido',
       },
     },
-    system: {
+    project: {
       type: mongoose.Schema.Types.ObjectId,
       required: false,
       index: true,
-      ref: 'System',
+      ref: 'Project',
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -33,7 +33,7 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Valida que el system y el user provistos existan en la base de datos
+// Valida que el project y el user provistos existan en la base de datos
 taskSchema.plugin(idValidator);
 
 module.exports = mongoose.model('Task', taskSchema);

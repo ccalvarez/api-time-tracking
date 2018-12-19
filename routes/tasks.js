@@ -19,11 +19,11 @@ router.post(
       .withMessage('Descripción de la tarea es requerida'),
     body('delayReason').trim(),
     body('comments').trim(),
-    body('systemId')
+    body('projectId')
       .trim()
       .not()
       .isEmpty()
-      .withMessage('Sistema de la tarea es requerido'),
+      .withMessage('Proyecto de la tarea es requerido'),
     body('userId')
       .trim()
       .not()
