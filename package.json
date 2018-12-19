@@ -4,6 +4,7 @@
   "description": "Express.js RESTful API for time tracking",
   "main": "app.js",
   "scripts": {
+    "build": "netlify-lambda build express",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js"
   },

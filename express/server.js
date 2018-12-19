@@ -51,3 +51,6 @@ mongoose
   .catch(err => {
     console.log(err);
   });
+
+module.exports = app;
+module.exports.handler = serverless(app);
