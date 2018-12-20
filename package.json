@@ -4,8 +4,10 @@
   "description": "Express.js RESTful API for time tracking",
   "main": "app.js",
   "scripts": {
+    "build": "netlify-lambda build express",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "start:lambda": "netlify-lambda serve express"
   },
   "repository": {
     "type": "git",
@@ -26,9 +28,10 @@
     "mongoose": "^5.3.14",
     "mongoose-hidden": "^1.6.0",
     "mongoose-id-validator": "^0.5.0",
-    "newrelic": "^4.12.0"
+    "serverless-http": "^1.8.0"
   },
   "devDependencies": {
+    "netlify-lambda": "^1.1.1",
     "nodemon": "^1.18.7"
   },
   "engines": {

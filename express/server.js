@@ -1,12 +1,13 @@
 require('dotenv').config();
 
 const express = require('express');
+const serverless = require('serverless-http');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-const usersRoutes = require('./routes/users');
-const projectsRoutes = require('./routes/projects');
-const tasksRoutes = require('./routes/tasks');
+const usersRoutes = require('../routes/users');
+const projectsRoutes = require('../routes/projects');
+const tasksRoutes = require('../routes/tasks');
 
 const app = express();
 
@@ -28,9 +29,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/users', usersRoutes);
-app.use('/projects', projectsRoutes);
-app.use('/tasks', tasksRoutes);
+app.use('/.netlify/functions/server/users', usersRoutes);
+app.use('/.netlify/functions/server/projects', projectsRoutes);
+app.use('/.netlify/functions/server/tasks', tasksRoutes);
 
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
@@ -44,10 +45,13 @@ mongoose
     { useCreateIndex: true, useNewUrlParser: true }
   )
   .then(result => {
-    app.listen(process.env.PORT, () => {
-      console.log(`Time Tracking API listening on port ${process.env.PORT}...`);
-    });
+    // app.listen(process.env.PORT, () => {
+    //   console.log(`Time Tracking API listening on port ${process.env.PORT}...`);
+    // });
   })
   .catch(err => {
     console.log(err);
   });
+
+module.exports = app;
+module.exports.handler = serverless(app);
