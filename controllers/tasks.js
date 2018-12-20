@@ -92,6 +92,26 @@ exports.editTask = (req, res, next) => {
                   }
                 });
             }
+          } else if (req.body.state == 'running') {
+            if (result.state != 'paused') {
+              res
+                .status(409)
+                .send({ error: 409, message: 'La tarea no está pausada' });
+            } else {
+              result.intervals.push({ start: new Date(), end: null });
+              result.state = 'running';
+              result
+                .save()
+                .then(updated => {
+                  res.status(200).send();
+                })
+                .catch(err => {
+                  if (!err.statusCode) {
+                    err.statusCode = 500;
+                    next(err);
+                  }
+                });
+            }
           } else {
             res.status(200).send();
           }
