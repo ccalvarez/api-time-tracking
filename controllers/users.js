@@ -12,9 +12,9 @@ exports.signUp = (req, res, next) => {
   }
 
   try {
-    bcrypt.hash(req.body.password.trim(), 12).then(hashedPassword => {
+    bcrypt.hash(req.body.password, 12).then(hashedPassword => {
       const user = UserModel({
-        email: req.body.email.trim(),
+        email: req.body.email,
         password: hashedPassword,
       });
 
