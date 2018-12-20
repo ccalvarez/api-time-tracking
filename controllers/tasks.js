@@ -93,10 +93,11 @@ exports.editTask = (req, res, next) => {
                 });
             }
           } else if (req.body.state == 'running') {
-            if (result.state != 'paused') {
-              res
-                .status(409)
-                .send({ error: 409, message: 'La tarea no está pausada' });
+            if (result.state != 'paused' && result.state != 'pending') {
+              res.status(409).send({
+                error: 409,
+                message: 'La tarea no está pausada ni pendiente',
+              });
             } else {
               result.intervals.push({ start: new Date(), end: null });
               result.state = 'running';
@@ -112,11 +113,76 @@ exports.editTask = (req, res, next) => {
                   }
                 });
             }
+          } else if (req.body.state == 'finished') {
+            if (result.state != 'running' && result.state != 'paused') {
+              res.status(409).send({
+                error: 409,
+                message: 'La tarea no está en ejecución ni pausada',
+              });
+            } else {
+              const lastIntervalStart = Math.max(
+                ...result.intervals.map(interval => {
+                  return interval.start;
+                })
+              );
+
+              const lastInterval = Array.from(result.intervals).find(i => {
+                return (
+                  i.start.toISOString() ==
+                  new Date(lastIntervalStart).toISOString()
+                );
+              });
+
+              if (lastInterval.end == null) {
+                // running task
+                TaskModel.update(
+                  {
+                    _id: result._id,
+                    'intervals.start': new Date(lastIntervalStart),
+                  },
+                  {
+                    $set: { state: 'finished', 'intervals.$.end': new Date() },
+                  },
+                  { runValidators: true }
+                )
+                  .then(updated => {
+                    res.status(200).send();
+                  })
+                  .catch(err => {
+                    if (!err.statusCode) {
+                      err.statusCode = 500;
+                      next(err);
+                    }
+                  });
+              } else {
+                // paused task
+                TaskModel.update(
+                  {
+                    _id: result._id,
+                  },
+                  {
+                    $set: { state: 'finished' },
+                  },
+                  { runValidators: true }
+                )
+                  .then(updated => {
+                    res.status(200).send();
+                  })
+                  .catch(err => {
+                    if (!err.statusCode) {
+                      err.statusCode = 500;
+                      next(err);
+                    }
+                  });
+              }
+            }
           } else {
-            res.status(200).send();
+            res.status(400).send({
+              error: 400,
+              message: 'Estado de la tarea no es válido',
+            });
           }
 
-          // else if (req.body.state == 'running'... 'finished'... )
           // qué hace si no envían ningún campo a actualizar?
         } else {
           res.status(404).send({ error: 404, message: 'La tarea no existe' });
