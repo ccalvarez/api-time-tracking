@@ -64,7 +64,7 @@ router.patch(
       }),
     body('state')
       .trim()
-      .isIn(['pending', 'running', 'paused', 'finished'])
+      .isIn(['running', 'paused', 'finished'])
       .withMessage('Estado de la tarea no es válido'),
   ],
   tasksController.editTask
