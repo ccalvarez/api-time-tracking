@@ -12,14 +12,14 @@ exports.createProject = (req, res, next) => {
 
   try {
     const project = ProjectModel({
-      name: req.body.name.trim(),
-      user: req.body.userId.trim(),
+      name: req.body.name,
+      user: req.body.userId,
     });
 
     project
       .save()
       .then(result => {
-        res.status(201).json(result);
+        res.status(201).json({ _id: result._id });
       })
       .catch(err => {
         if (!err.statusCode) {

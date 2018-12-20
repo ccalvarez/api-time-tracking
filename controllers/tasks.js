@@ -25,7 +25,7 @@ exports.createTask = (req, res, next) => {
     task
       .save()
       .then(result => {
-        res.status(201).send({ _id: result._id });
+        res.status(201).json({ _id: result._id });
       })
       .catch(err => {
         if (!err.statusCode) {
