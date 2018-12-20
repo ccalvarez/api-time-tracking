@@ -1,5 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator/check');
+const mongoose = require('mongoose');
 // todo: sanitizar body
 // const { sanitizeBody } = require('express-validator/filter');
 
@@ -14,11 +15,19 @@ router.post(
     body('name')
       .trim()
       .not()
-      .isEmpty(),
+      .isEmpty()
+      .withMessage('Nombre del proyecto es requerido'),
     body('userId')
       .trim()
       .not()
-      .isEmpty(),
+      .isEmpty()
+      .withMessage('Usuario del proyecto es requerido')
+      .custom(value => {
+        if (!mongoose.Types.ObjectId.isValid(value)) {
+          return Promise.reject('Id del usuario no tiene un formato válido');
+        }
+        return true;
+      }),
   ],
   projectsController.createProject
 );

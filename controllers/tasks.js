@@ -7,7 +7,6 @@ exports.createTask = (req, res, next) => {
   if (!errors.isEmpty()) {
     const error = new Error(errors.array()[0].msg);
     error.statusCode = 422;
-
     throw error;
   }
 
