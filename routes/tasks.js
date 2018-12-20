@@ -31,12 +31,24 @@ router.post(
       .trim()
       .not()
       .isEmpty()
-      .withMessage('Proyecto de la tarea es requerido'),
+      .withMessage('Proyecto de la tarea es requerido')
+      .custom(value => {
+        if (!mongoose.Types.ObjectId.isValid(value)) {
+          return Promise.reject('Id del proyecto no tiene un formato válido');
+        }
+        return true;
+      }),
     body('userId')
       .trim()
       .not()
       .isEmpty()
-      .withMessage('Usuario de la tarea es requerido'),
+      .withMessage('Usuario de la tarea es requerido')
+      .custom(value => {
+        if (!mongoose.Types.ObjectId.isValid(value)) {
+          return Promise.reject('Id del usuario no tiene un formato válido');
+        }
+        return true;
+      }),
     body('start')
       .not()
       .isEmpty()
