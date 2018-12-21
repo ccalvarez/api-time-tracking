@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const idValidator = require('mongoose-id-validator');
+const mongooseHidden = require('mongoose-hidden');
 
 const taskSchema = new mongoose.Schema(
   {
@@ -42,5 +43,17 @@ const taskSchema = new mongoose.Schema(
 
 // Valida que el project y el user provistos existan en la base de datos
 taskSchema.plugin(idValidator);
+
+// Oculta campos en el objeto de retorno:
+taskSchema.plugin(mongooseHidden(), {
+  //hidden: { _id: false, description: false, intervals: false, delayReason: false,  },
+  hidden: {
+    _id: false,
+    includeInReport: true,
+    user: true,
+    createdAt: true,
+    updatedAt: true,
+  },
+});
 
 module.exports = mongoose.model('Task', taskSchema);

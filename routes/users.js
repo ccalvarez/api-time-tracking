@@ -1,9 +1,11 @@
 const express = require('express');
-const { body } = require('express-validator/check');
+const { body, param } = require('express-validator/check');
+const mongoose = require('mongoose');
 // todo: sanitizar body
 // const { sanitizeBody } = require('express-validator/filter');
 
 const usersController = require('../controllers/users');
+const tasksController = require('../controllers/tasks');
 
 const router = express.Router();
 
@@ -24,9 +26,20 @@ router.post(
   usersController.signUp
 );
 
-// GET /users
-router.get('/', (req, res, next) => {
-  res.status(200).json({ prueba: 'prueba' });
-});
+// GET /users/:userId/tasks
+router.get(
+  '/:userId/tasks',
+  [
+    param('userId')
+      .trim()
+      .custom(value => {
+        if (!mongoose.Types.ObjectId.isValid(value)) {
+          return Promise.reject('Id del usuario no tiene un formato válido');
+        }
+        return true;
+      }),
+  ],
+  tasksController.getTasksByUser
+);
 
 module.exports = router;
