@@ -14,7 +14,11 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-  const allowedOrigins = ['https://s.codepen.io', 'http://localhost:8081'];
+  const allowedOrigins = [
+    'https://s.codepen.io',
+    'http://localhost:8081',
+    'http://172.18.1.72:8081',
+  ];
   const origin = req.headers.origin;
 
   if (allowedOrigins.includes(origin)) {
