@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const usersController = require('../controllers/users');
 const tasksController = require('../controllers/tasks');
+const projectsController = require('../controllers/projects');
 
 const router = express.Router();
 
@@ -40,6 +41,22 @@ router.get(
       }),
   ],
   tasksController.getTasksByUser
+);
+
+// GET /users/:userId/projects
+router.get(
+  '/:userId/projects',
+  [
+    param('userId')
+      .trim()
+      .custom(value => {
+        if (!mongoose.Types.ObjectId.isValid(value)) {
+          return Promise.reject('Id del usuario no tiene un formato válido');
+        }
+        return true;
+      }),
+  ],
+  projectsController.getProjectsByUser
 );
 
 module.exports = router;
