@@ -18,6 +18,7 @@ app.use((req, res, next) => {
     'https://s.codepen.io',
     'http://localhost:8081',
     'http://172.18.1.72:8081',
+    'http://localhost:8080',
   ];
   const origin = req.headers.origin;
 
