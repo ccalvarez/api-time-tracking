@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator/check');
-
+const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
 
 exports.signUp = (req, res, next) => {
@@ -41,4 +41,40 @@ exports.signUp = (req, res, next) => {
     }
     next(err);
   }
+};
+
+exports.login = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  let loadedUser;
+
+  UserModel.findOne({ email: email })
+    .then(user => {
+      if (!user) {
+        const error = new Error('No existe un usuario con este Email');
+        error.statusCode = 401;
+        throw error;
+      }
+      loadedUser = user;
+      return bcrypt.compare(password, user.password);
+    })
+    .then(isEqual => {
+      if (!isEqual) {
+        const error = new Error('Credenciales incorrectas');
+        error.statusCode = 401;
+        throw error;
+      }
+      // credenciales correctas, genera JWT:
+      const token = jwt.sign(
+        { userId: loadedUser._id.toString() },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
 };
