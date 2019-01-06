@@ -51,7 +51,7 @@ exports.login = (req, res, next) => {
   UserModel.findOne({ email: email })
     .then(user => {
       if (!user) {
-        const error = new Error('No existe un usuario con este Email');
+        const error = new Error('Email no registrado');
         error.statusCode = 401;
         throw error;
       }
@@ -70,6 +70,7 @@ exports.login = (req, res, next) => {
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
       );
+      res.status(200).send({ token: token, _id: loadedUser._id.toString() });
     })
     .catch(err => {
       if (!err.statusCode) {
