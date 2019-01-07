@@ -76,7 +76,7 @@ exports.login = (req, res, next) => {
         process.env.JWT_SECRET
       );
 
-      res.status(200).send({ token: token, _id: loadedUser._id.toString() });
+      res.status(200).send({ token: token });
     })
     .catch(err => {
       if (!err.statusCode) {
