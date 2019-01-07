@@ -65,11 +65,17 @@ exports.login = (req, res, next) => {
         throw error;
       }
       // credenciales correctas, genera JWT:
+      let date = new Date();
+      date.setDate(date.getDate() + 30);
+
       const token = jwt.sign(
-        { userId: loadedUser._id.toString() },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' }
+        {
+          exp: date.getTime(),
+          data: { userId: loadedUser._id.toString() },
+        },
+        process.env.JWT_SECRET
       );
+
       res.status(200).send({ token: token, _id: loadedUser._id.toString() });
     })
     .catch(err => {
