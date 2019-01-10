@@ -59,4 +59,7 @@ router.get(
   projectsController.getProjectsByUser
 );
 
+// POST /users/login
+router.post('/login', usersController.login);
+
 module.exports = router;

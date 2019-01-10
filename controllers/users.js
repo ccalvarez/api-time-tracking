@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator/check');
-
+const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
 
 exports.signUp = (req, res, next) => {
@@ -18,6 +18,8 @@ exports.signUp = (req, res, next) => {
         password: hashedPassword,
       });
 
+      // TODO: refactorizar, primero buscar para saber si ya existe, porque al tratar de
+      // guardar usuario que ya existe, está tardando de 5 a 6 segundos en dar el error de duplicate:
       user
         .save()
         .then(result => {
@@ -41,4 +43,47 @@ exports.signUp = (req, res, next) => {
     }
     next(err);
   }
+};
+
+exports.login = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  let loadedUser;
+
+  UserModel.findOne({ email: email })
+    .then(user => {
+      if (!user) {
+        const error = new Error('Email no registrado');
+        error.statusCode = 401;
+        throw error;
+      }
+      loadedUser = user;
+      return bcrypt.compare(password, user.password);
+    })
+    .then(isEqual => {
+      if (!isEqual) {
+        const error = new Error('Credenciales incorrectas');
+        error.statusCode = 401;
+        throw error;
+      }
+      // credenciales correctas, genera JWT:
+      let date = new Date();
+      date.setDate(date.getDate() + 30);
+
+      const token = jwt.sign(
+        {
+          exp: date.getTime(),
+          data: { userId: loadedUser._id.toString() },
+        },
+        process.env.JWT_SECRET
+      );
+
+      res.status(200).send({ token: token });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
 };
