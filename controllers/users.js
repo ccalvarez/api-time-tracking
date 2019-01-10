@@ -18,6 +18,8 @@ exports.signUp = (req, res, next) => {
         password: hashedPassword,
       });
 
+      // TODO: refactorizar, primero buscar para saber si ya existe, porque al tratar de
+      // guardar usuario que ya existe, está tardando de 5 a 6 segundos en dar el error de duplicate:
       user
         .save()
         .then(result => {
