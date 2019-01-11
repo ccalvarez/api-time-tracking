@@ -9,7 +9,7 @@
 
 ## Hosting
 
-- [Netlify](https://www.netlify.com/) with [Lambda Functions](https://www.netlify.com/docs/functions/) :fire:
+- [Netlify](https://www.netlify.com/) with [Lambda Functions](https://www.netlify.com/docs/functions/) 🌶️:fire:
 
 ## Important
 
