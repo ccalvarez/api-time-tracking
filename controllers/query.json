@@ -1,0 +1,21 @@
+{
+  "$and": [
+    { "user": ObjectId("5c2fa0793c00d6627828fe58") },
+    {
+      "$or": [
+        { "intervals.start": { "$gte": start, "$lt": end } },
+        {
+          "$and": [
+            { "intervals.start": { "$lt": start } },
+            {
+              "$or": [
+                { "intervals.end": null },
+                { "intervals.end": { "$gte": start } }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
