@@ -79,16 +79,19 @@ exports.editTask = (req, res, next) => {
                 })
               );
 
+              const lastIntervalEnd = new Date();
               TaskModel.update(
                 {
                   _id: result._id,
                   'intervals.start': new Date(lastIntervalStart),
                 },
-                { $set: { state: 'paused', 'intervals.$.end': new Date() } },
+                {
+                  $set: { state: 'paused', 'intervals.$.end': lastIntervalEnd },
+                },
                 { runValidators: true }
               )
                 .then(updated => {
-                  res.status(200).send();
+                  res.status(200).json({ end: lastIntervalEnd });
                 })
                 .catch(err => {
                   if (!err.statusCode) {
@@ -104,12 +107,13 @@ exports.editTask = (req, res, next) => {
                 message: 'La tarea no está pausada ni pendiente',
               });
             } else {
-              result.intervals.push({ start: new Date(), end: null });
+              const newIntervalStart = new Date();
+              result.intervals.push({ start: newIntervalStart, end: null });
               result.state = 'running';
               result
                 .save()
                 .then(updated => {
-                  res.status(200).send();
+                  res.status(200).json({ start: newIntervalStart });
                 })
                 .catch(err => {
                   if (!err.statusCode) {
@@ -140,18 +144,24 @@ exports.editTask = (req, res, next) => {
 
               if (lastInterval.end == null) {
                 // running task
+
+                const lastIntervalEnd = new Date();
+
                 TaskModel.update(
                   {
                     _id: result._id,
                     'intervals.start': new Date(lastIntervalStart),
                   },
                   {
-                    $set: { state: 'finished', 'intervals.$.end': new Date() },
+                    $set: {
+                      state: 'finished',
+                      'intervals.$.end': lastIntervalEnd,
+                    },
                   },
                   { runValidators: true }
                 )
                   .then(updated => {
-                    res.status(200).send();
+                    res.status(200).json({ end: lastIntervalEnd });
                   })
                   .catch(err => {
                     if (!err.statusCode) {
