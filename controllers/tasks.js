@@ -289,6 +289,7 @@ exports.getReportByUser = (req, res, next) => {
 
           const totalTime = task.intervals
             .sort((a, b) => {
+              // TODO: hacer este ordenamiento en base de datos
               return a.start - b.start;
             })
             .reduce((accumulator, currentValue) => {
@@ -304,6 +305,7 @@ exports.getReportByUser = (req, res, next) => {
 
           return task.intervals
             .sort((a, b) => {
+              // TODO: hacer este ordenamiento en base de datos
               return a.start - b.start;
             })
             .map(interval => {
