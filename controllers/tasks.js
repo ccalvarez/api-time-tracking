@@ -281,7 +281,58 @@ exports.getReportByUser = (req, res, next) => {
     })
       .populate('project')
       .then(result => {
-        res.status(200).json(result);
+        const tasks = result.map(task => {
+          const description = task.description;
+          const project = task.project.name;
+
+          // TODO: optimizar, hacer sólo un reduce o sólo un map:
+
+          const totalTime = task.intervals
+            .sort((a, b) => {
+              return a.start - b.start;
+            })
+            .reduce((accumulator, currentValue) => {
+              currentValue.accumulatedTime =
+                accumulator +
+                (new Date(currentValue.end) - new Date(currentValue.start));
+              // return (
+              //   accumulator +
+              //   (new Date(currentValue.end) - new Date(currentValue.start))
+              // );
+              return currentValue.accumulatedTime;
+            }, 0);
+
+          return task.intervals
+            .sort((a, b) => {
+              return a.start - b.start;
+            })
+            .map(interval => {
+              const start = new Date(interval.start);
+              const end = new Date(interval.end);
+              const intervalTime = end - start;
+              return {
+                start: start.toGMTString(),
+                end: end.toGMTString(),
+                date: [
+                  start
+                    .getDate()
+                    .toString()
+                    .padStart(2, '0'),
+                  (start.getMonth() + 1).toString().padStart(2, '0'),
+                  start.getFullYear().toString(),
+                ].join('-'),
+                description,
+                project,
+                totalTime,
+                intervalTime,
+                intervalPercentage: (intervalTime * 100) / totalTime,
+                intervalAccumulatedPercentage:
+                  (interval.accumulatedTime * 100) / totalTime,
+              };
+            });
+        }); // TODO: agregar aquí un sort para que los intervalos se ordenen estrictamente por start
+
+        res.status(200).json(tasks);
       })
       .catch(err => {
         if (!err.statusCode) {
