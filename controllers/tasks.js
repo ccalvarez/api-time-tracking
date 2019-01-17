@@ -303,35 +303,30 @@ exports.getReportByUser = (req, res, next) => {
               return currentValue.accumulatedTime;
             }, 0);
 
-          return task.intervals
-            .sort((a, b) => {
-              // TODO: hacer este ordenamiento en base de datos
-              return a.start - b.start;
-            })
-            .map(interval => {
-              const start = new Date(interval.start);
-              const end = new Date(interval.end);
-              const intervalTime = end - start;
-              return {
-                start: start.toGMTString(),
-                end: end.toGMTString(),
-                date: [
-                  start
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0'),
-                  (start.getMonth() + 1).toString().padStart(2, '0'),
-                  start.getFullYear().toString(),
-                ].join('-'),
-                description,
-                project,
-                totalTime,
-                intervalTime,
-                intervalPercentage: (intervalTime * 100) / totalTime,
-                intervalAccumulatedPercentage:
-                  (interval.accumulatedTime * 100) / totalTime,
-              };
-            });
+          return task.intervals.map(interval => {
+            const start = new Date(interval.start);
+            const end = new Date(interval.end);
+            const intervalTime = end - start;
+            return {
+              start: start.toGMTString(),
+              end: end.toGMTString(),
+              date: [
+                start
+                  .getDate()
+                  .toString()
+                  .padStart(2, '0'),
+                (start.getMonth() + 1).toString().padStart(2, '0'),
+                start.getFullYear().toString(),
+              ].join('-'),
+              description,
+              project,
+              totalTime,
+              intervalTime,
+              intervalPercentage: (intervalTime * 100) / totalTime,
+              intervalAccumulatedPercentage:
+                (interval.accumulatedTime * 100) / totalTime,
+            };
+          });
         }); // TODO: agregar aquí un sort para que los intervalos se ordenen estrictamente por start
 
         res.status(200).json(tasks);
