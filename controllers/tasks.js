@@ -281,6 +281,8 @@ exports.getReportByUser = (req, res, next) => {
     })
       .populate('project')
       .then(result => {
+        const groupedIntervals = [];
+
         const tasks = result.map(task => {
           const description = task.description;
           const project = task.project.name;
@@ -303,33 +305,59 @@ exports.getReportByUser = (req, res, next) => {
               return currentValue.accumulatedTime;
             }, 0);
 
-          return task.intervals.map(interval => {
+          /*return*/ task.intervals.map(interval => {
             const start = new Date(interval.start);
             const end = new Date(interval.end);
             const intervalTime = end - start;
-            return {
-              start: start.toGMTString(),
-              end: end.toGMTString(),
-              date: [
-                start
-                  .getDate()
-                  .toString()
-                  .padStart(2, '0'),
-                (start.getMonth() + 1).toString().padStart(2, '0'),
-                start.getFullYear().toString(),
-              ].join('-'),
-              description,
-              project,
-              totalTime,
-              intervalTime,
-              intervalPercentage: (intervalTime * 100) / totalTime,
-              intervalAccumulatedPercentage:
-                (interval.accumulatedTime * 100) / totalTime,
-            };
+            const date = [
+              start
+                .getDate()
+                .toString()
+                .padStart(2, '0'),
+              (start.getMonth() + 1).toString().padStart(2, '0'),
+              start.getFullYear().toString(),
+            ].join('-');
+            // return {
+            //   start: start.toGMTString(),
+            //   end: end.toGMTString(),
+            // date,
+            //   description,
+            //   project,
+            //   totalTime,
+            //   intervalTime,
+            //   intervalPercentage: (intervalTime * 100) / totalTime,
+            //   intervalAccumulatedPercentage:
+            //     (interval.accumulatedTime * 100) / totalTime,
+            // };
+            const found = groupedIntervals.find(
+              i => i.description === description && i.date === date
+            );
+            if (!found) {
+              groupedIntervals.push({
+                start: start.toGMTString(),
+                end: end.toGMTString(),
+                date,
+                description,
+                project,
+                totalTime,
+                intervalTime,
+                intervalAccumulatedTime: interval.accumulatedTime,
+                intervalPercentage: (intervalTime * 100) / totalTime,
+                intervalAccumulatedPercentage: roundToTwo(
+                  (interval.accumulatedTime * 100) / totalTime
+                ),
+              });
+            } else {
+              found.intervalAccumulatedTime = interval.accumulatedTime;
+              found.intervalAccumulatedPercentage = roundToTwo(
+                (interval.accumulatedTime * 100) / totalTime
+              );
+            }
           });
         }); // TODO: agregar aquí un sort para que los intervalos se ordenen estrictamente por start
 
-        res.status(200).json(tasks);
+        // const agrupado = new Set(tasks);
+        res.status(200).json(groupedIntervals);
       })
       .catch(err => {
         if (!err.statusCode) {
@@ -344,3 +372,7 @@ exports.getReportByUser = (req, res, next) => {
     next(err);
   }
 };
+
+function roundToTwo(num) {
+  return +(Math.round(num + 'e+2') + 'e-2');
+}
