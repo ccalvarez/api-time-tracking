@@ -305,6 +305,12 @@ exports.getReportByUser = (req, res, next) => {
               return currentValue.accumulatedTime;
             }, 0);
 
+          let hoursWithDecimals;
+          let hours;
+          let minutesInDecimals;
+          let minutes;
+          let intervalDuration;
+
           /*return*/ task.intervals.map(interval => {
             const start = new Date(interval.start);
             const end = new Date(interval.end);
@@ -317,6 +323,16 @@ exports.getReportByUser = (req, res, next) => {
               (start.getMonth() + 1).toString().padStart(2, '0'),
               start.getFullYear().toString(),
             ].join('-');
+
+            hoursWithDecimals = intervalTime / 3600000;
+            hours = Math.floor(hoursWithDecimals);
+            minutesInDecimals = hoursWithDecimals % 1;
+            minutes = roundToZero(minutesInDecimals * 60);
+            intervalDuration = hours
+              .toString()
+              .padStart(2, '0')
+              .concat(':', minutes.toString().padStart(2, '0'));
+
             // return {
             //   start: start.toGMTString(),
             //   end: end.toGMTString(),
@@ -343,12 +359,24 @@ exports.getReportByUser = (req, res, next) => {
                 intervalTime,
                 intervalAccumulatedTime: interval.accumulatedTime,
                 intervalPercentage: (intervalTime * 100) / totalTime,
+                intervalDuration,
                 intervalAccumulatedPercentage: roundToTwo(
                   (interval.accumulatedTime * 100) / totalTime
                 ),
               });
             } else {
+              hoursWithDecimals = interval.accumulatedTime / 3600000;
+              hours = Math.floor(hoursWithDecimals);
+              minutesInDecimals = hoursWithDecimals % 1;
+              minutes = roundToZero(minutesInDecimals * 60);
+              intervalDuration = hours
+                .toString()
+                .padStart(2, '0')
+                .concat(':', minutes.toString().padStart(2, '0'));
+
+              found.intervalTime = interval.accumulatedTime;
               found.intervalAccumulatedTime = interval.accumulatedTime;
+              found.intervalDuration = intervalDuration;
               found.intervalAccumulatedPercentage = roundToTwo(
                 (interval.accumulatedTime * 100) / totalTime
               );
@@ -375,4 +403,8 @@ exports.getReportByUser = (req, res, next) => {
 
 function roundToTwo(num) {
   return +(Math.round(num + 'e+2') + 'e-2');
+}
+
+function roundToZero(num) {
+  return +(Math.round(num + 'e+0') + 'e-0');
 }
