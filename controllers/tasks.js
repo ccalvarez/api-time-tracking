@@ -281,7 +281,7 @@ exports.getReportByUser = (req, res, next) => {
     })
       .populate('project')
       .then(result => {
-        const groupedIntervals = [];
+        let groupedIntervals = [];
 
         const tasks = result.map(task => {
           const description = task.description;
@@ -350,19 +350,14 @@ exports.getReportByUser = (req, res, next) => {
             );
             if (!found) {
               groupedIntervals.push({
-                start: start.toGMTString(),
-                end: end.toGMTString(),
+                start: interval.start,
                 date,
                 description,
-                project,
-                totalTime,
-                intervalTime,
-                intervalAccumulatedTime: interval.accumulatedTime,
-                intervalPercentage: (intervalTime * 100) / totalTime,
                 intervalDuration,
                 intervalAccumulatedPercentage: roundToTwo(
                   (interval.accumulatedTime * 100) / totalTime
                 ),
+                project,
               });
             } else {
               hoursWithDecimals = interval.accumulatedTime / 3600000;
@@ -373,9 +368,6 @@ exports.getReportByUser = (req, res, next) => {
                 .toString()
                 .padStart(2, '0')
                 .concat(':', minutes.toString().padStart(2, '0'));
-
-              found.intervalTime = interval.accumulatedTime;
-              found.intervalAccumulatedTime = interval.accumulatedTime;
               found.intervalDuration = intervalDuration;
               found.intervalAccumulatedPercentage = roundToTwo(
                 (interval.accumulatedTime * 100) / totalTime
@@ -384,6 +376,9 @@ exports.getReportByUser = (req, res, next) => {
           });
         }); // TODO: agregar aquí un sort para que los intervalos se ordenen estrictamente por start
 
+        groupedIntervals = groupedIntervals
+          .filter(i => i.start >= start && i.start <= end)
+          .sort((a, b) => a.start - b.start);
         // const agrupado = new Set(tasks);
         res.status(200).json(groupedIntervals);
       })
