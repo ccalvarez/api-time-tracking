@@ -244,3 +244,162 @@ exports.getTasksByUser = (req, res, next) => {
     next(err);
   }
 };
+
+exports.getReportByUser = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = new Error(errors.array()[0].msg);
+    error.statusCode = 422;
+    throw error;
+  }
+
+  const userId = new mongoose.Types.ObjectId(req.params.userId);
+  const start = new Date(req.body.start);
+  const end = new Date(req.body.end);
+
+  try {
+    TaskModel.find({
+      $and: [
+        { user: userId },
+        {
+          $or: [
+            { 'intervals.start': { $gte: start, $lt: end } },
+            {
+              $and: [
+                { 'intervals.start': { $lt: start } },
+                {
+                  $or: [
+                    { 'intervals.end': null },
+                    { 'intervals.end': { $gte: start } },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    })
+      .populate('project')
+      .then(result => {
+        let groupedIntervals = [];
+
+        const tasks = result.map(task => {
+          const description = task.description;
+          const project = task.project.name;
+
+          // TODO: optimizar, hacer sólo un reduce o sólo un map:
+
+          const totalTime = task.intervals
+            .sort((a, b) => {
+              // TODO: hacer este ordenamiento en base de datos
+              return a.start - b.start;
+            })
+            .reduce((accumulator, currentValue) => {
+              currentValue.accumulatedTime =
+                accumulator +
+                (new Date(currentValue.end) - new Date(currentValue.start));
+              // return (
+              //   accumulator +
+              //   (new Date(currentValue.end) - new Date(currentValue.start))
+              // );
+              return currentValue.accumulatedTime;
+            }, 0);
+
+          let hoursWithDecimals;
+          let hours;
+          let minutesInDecimals;
+          let minutes;
+          let intervalDuration;
+
+          /*return*/ task.intervals.map(interval => {
+            const start = new Date(interval.start);
+            const end = new Date(interval.end);
+            const intervalTime = end - start;
+            const date = [
+              start
+                .getDate()
+                .toString()
+                .padStart(2, '0'),
+              (start.getMonth() + 1).toString().padStart(2, '0'),
+              start.getFullYear().toString(),
+            ].join('-');
+
+            hoursWithDecimals = intervalTime / 3600000;
+            hours = Math.floor(hoursWithDecimals);
+            minutesInDecimals = hoursWithDecimals % 1;
+            minutes = roundToZero(minutesInDecimals * 60);
+            intervalDuration = hours
+              .toString()
+              .padStart(2, '0')
+              .concat(':', minutes.toString().padStart(2, '0'));
+
+            // return {
+            //   start: start.toGMTString(),
+            //   end: end.toGMTString(),
+            // date,
+            //   description,
+            //   project,
+            //   totalTime,
+            //   intervalTime,
+            //   intervalPercentage: (intervalTime * 100) / totalTime,
+            //   intervalAccumulatedPercentage:
+            //     (interval.accumulatedTime * 100) / totalTime,
+            // };
+            const found = groupedIntervals.find(
+              i => i.description === description && i.date === date
+            );
+            if (!found) {
+              groupedIntervals.push({
+                start: interval.start,
+                date,
+                description,
+                intervalDuration,
+                intervalAccumulatedPercentage: roundToTwo(
+                  (interval.accumulatedTime * 100) / totalTime
+                ),
+                project,
+              });
+            } else {
+              hoursWithDecimals = interval.accumulatedTime / 3600000;
+              hours = Math.floor(hoursWithDecimals);
+              minutesInDecimals = hoursWithDecimals % 1;
+              minutes = roundToZero(minutesInDecimals * 60);
+              intervalDuration = hours
+                .toString()
+                .padStart(2, '0')
+                .concat(':', minutes.toString().padStart(2, '0'));
+              found.intervalDuration = intervalDuration;
+              found.intervalAccumulatedPercentage = roundToTwo(
+                (interval.accumulatedTime * 100) / totalTime
+              );
+            }
+          });
+        }); // TODO: agregar aquí un sort para que los intervalos se ordenen estrictamente por start
+
+        groupedIntervals = groupedIntervals
+          .filter(i => i.start >= start && i.start <= end)
+          .sort((a, b) => a.start - b.start);
+        // const agrupado = new Set(tasks);
+        res.status(200).json(groupedIntervals);
+      })
+      .catch(err => {
+        if (!err.statusCode) {
+          err.statusCode = 500;
+          next(err);
+        }
+      });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
+function roundToTwo(num) {
+  return +(Math.round(num + 'e+2') + 'e-2');
+}
+
+function roundToZero(num) {
+  return +(Math.round(num + 'e+0') + 'e-0');
+}

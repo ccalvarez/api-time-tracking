@@ -43,6 +43,36 @@ router.get(
   tasksController.getTasksByUser
 );
 
+// GET /users/:userId/report
+router.get(
+  '/:userId/report',
+  [
+    param('userId')
+      .trim()
+      .custom(value => {
+        if (!mongoose.Types.ObjectId.isValid(value)) {
+          return Promise.reject('Id del usuario no tiene un formato válido');
+        }
+        return true;
+      }),
+    body('start')
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage('Fecha de inicio es requerida')
+      .isISO8601()
+      .withMessage('Fecha de inicio no tiene un formato válido'),
+    body('end')
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage('Fecha de fin es requerida')
+      .isISO8601()
+      .withMessage('Fecha de fin no tiene un formato válido'),
+  ],
+  tasksController.getReportByUser
+);
+
 // GET /users/:userId/projects
 router.get(
   '/:userId/projects',
