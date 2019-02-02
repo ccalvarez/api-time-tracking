@@ -44,7 +44,7 @@ router.get(
 );
 
 // GET /users/:userId/report
-router.get(
+router.post(
   '/:userId/report',
   [
     param('userId')
