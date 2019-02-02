@@ -322,7 +322,7 @@ exports.getReportByUser = (req, res, next) => {
                 .padStart(2, '0'),
               (start.getMonth() + 1).toString().padStart(2, '0'),
               start.getFullYear().toString(),
-            ].join('-');
+            ].join('/');
 
             hoursWithDecimals = intervalTime / 3600000;
             hours = Math.floor(hoursWithDecimals);
