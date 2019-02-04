@@ -354,7 +354,7 @@ exports.getReportByUser = (req, res, next) => {
                 date,
                 description,
                 intervalDuration,
-                intervalAccumulatedPercentage: roundToTwo(
+                intervalAccumulatedPercentage: roundToZero(
                   (interval.accumulatedTime * 100) / totalTime
                 ),
                 project,
@@ -369,7 +369,7 @@ exports.getReportByUser = (req, res, next) => {
                 .padStart(2, '0')
                 .concat(':', minutes.toString().padStart(2, '0'));
               found.intervalDuration = intervalDuration;
-              found.intervalAccumulatedPercentage = roundToTwo(
+              found.intervalAccumulatedPercentage = roundToZero(
                 (interval.accumulatedTime * 100) / totalTime
               );
             }
