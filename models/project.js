@@ -4,7 +4,7 @@ const mongooseHidden = require('mongoose-hidden');
 
 const projectSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
@@ -13,6 +13,14 @@ const projectSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
+);
+
+projectSchema.index(
+  {
+    name: 1,
+    user: 1,
+  },
+  { unique: true }
 );
 
 // Valida que el user provisto exista en la colección users
