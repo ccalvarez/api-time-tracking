@@ -289,19 +289,53 @@ exports.getReportByUser = (req, res, next) => {
 
           // TODO: optimizar, hacer sólo un reduce o sólo un map:
 
+          let dailyAccumulator = 0;
+          let day = [
+            start
+              .getDate()
+              .toString()
+              .padStart(2, '0'),
+            (start.getMonth() + 1).toString().padStart(2, '0'),
+            start.getFullYear().toString(),
+          ].join('/');
+
           const totalTime = task.intervals
             .sort((a, b) => {
               // TODO: hacer este ordenamiento en base de datos
               return a.start - b.start;
             })
             .reduce((accumulator, currentValue) => {
+              if (
+                [
+                  new Date(currentValue.start)
+                    .getDate()
+                    .toString()
+                    .padStart(2, '0'),
+                  (start.getMonth() + 1).toString().padStart(2, '0'),
+                  start.getFullYear().toString(),
+                ].join('/') != day
+              ) {
+                dailyAccumulator = 0;
+              }
+
               currentValue.accumulatedTime =
                 accumulator +
                 (new Date(currentValue.end) - new Date(currentValue.start));
-              // return (
-              //   accumulator +
-              //   (new Date(currentValue.end) - new Date(currentValue.start))
-              // );
+
+              dailyAccumulator +=
+                new Date(currentValue.end) - new Date(currentValue.start);
+
+              currentValue.dailyAccumulatedTime = dailyAccumulator;
+
+              day = [
+                new Date(currentValue.start)
+                  .getDate()
+                  .toString()
+                  .padStart(2, '0'),
+                (start.getMonth() + 1).toString().padStart(2, '0'),
+                start.getFullYear().toString(),
+              ].join('/');
+
               return currentValue.accumulatedTime;
             }, 0);
 
@@ -314,7 +348,7 @@ exports.getReportByUser = (req, res, next) => {
           /*return*/ task.intervals.map(interval => {
             const start = new Date(interval.start);
             const end = new Date(interval.end);
-            const intervalTime = end - start;
+            const intervalTime = interval.dailyAccumulatedTime;
             const date = [
               start
                 .getDate()
@@ -360,7 +394,7 @@ exports.getReportByUser = (req, res, next) => {
                 project,
               });
             } else {
-              hoursWithDecimals = interval.accumulatedTime / 3600000;
+              hoursWithDecimals = interval.dailyAccumulatedTime / 3600000;
               hours = Math.floor(hoursWithDecimals);
               minutesInDecimals = hoursWithDecimals % 1;
               minutes = roundToZero(minutesInDecimals * 60);
