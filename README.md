@@ -1,6 +1,12 @@
 # api-time-tracking
 > Express.js RESTful API for logging and reporting daily tasks.
 
+- [Features](https://github.com/ccalvarez/api-time-tracking#features)
+- [API Description](https://github.com/ccalvarez/api-time-tracking#api-description)
+- [Hosting](https://github.com/ccalvarez/api-time-tracking#hosting)
+- [Environment variables](https://github.com/ccalvarez/api-time-tracking#environment-variables)
+- [Project setup](https://github.com/ccalvarez/api-time-tracking#project-setup)
+
 ## Features
 
 - [Express](https://expressjs.com/)
@@ -24,7 +30,7 @@
 
 - [Netlify](https://www.netlify.com/) with [Lambda Functions](https://www.netlify.com/docs/functions/) 🌶️:fire:
 
-## Important
+## Environment variables
 
 This application uses the [Dotenv](https://www.npmjs.com/package/dotenv) npm package to load environment variables.
 To run the application, copy the `.env.copy` file as `.env` and edit the latter to set appropriate values for the environment variables.
