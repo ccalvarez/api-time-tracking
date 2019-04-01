@@ -9,16 +9,16 @@
 
 ## API Description
 
-|Verb| Route| Description| Route example| Request body example
+|Verb| Route| Description| Request body example| Route example
 |:---|:-----|:-----------|:-------------|:--------------------|
-|POST|/users|User Sign up|http://localhost:9000/.netlify/functions/server/users|<code>{ "email": "test@domain.com",    "password": "test" }</code>|
-|POST|/users/login|User Login|http://localhost:9000/.netlify/functions/server/users/login|<code>{ "email": "test@domain.com",    "password": "test" }</code>|
-|POST|/projects|Create project|http://localhost:9000/.netlify/functions/server/projects|<code>{ "name": "My new project",    "userId": "5c1591a080980742861d7ef6" }</code>|
-|POST|/tasks|Create task|http://localhost:9000/.netlify/functions/server/tasks|<code>{ "description": "My new task", "projectId": "5c1591a080980742861d7ef6",	"userId": "5c1591a080980742861d7ef6",	"start": true, "includeInReport": true }</code>|
-|PATCH|/tasks|Change task's state (running, paused, finished)|http://localhost:9000/.netlify/functions/server/tasks|<code>{	"taskId": "5c1591a080980742861d7ef6",	"state": "finished" }</code>|
-|GET|/users/:userId/projects|Get projects by user|http://localhost:9000/.netlify/functions/server/users/5c1591a080980742861d7ef6/projects||
-|GET|/users/:userId/tasks|Get tasks by user|http://localhost:9000/.netlify/functions/server/users/5c1591a080980742861d7ef6/tasks||
-|POST|/users/:userId/report|Get tasks report by user|http://localhost:9000/.netlify/functions/server/users/5c1591a080980742861d7ef6/report|<code>{ "start": "2019-01-01T06:00:00Z",	"end": "2019-02-01T06:00:00Z" }</code>|
+|POST|/users|User Sign up|<code>{ "email": "test@domain.com", "password": "test" }</code>|http://localhost:9000/.netlify/functions/server/users|
+|POST|/users/login|User Login|<code>{ "email": "test@domain.com",    "password": "test" }</code>|http://localhost:9000/.netlify/functions/server/users/login|
+|POST|/projects|Create project|<code>{ "name": "My new project",    "userId": "5c1591a080980742861d7ef6" }</code>|http://localhost:9000/.netlify/functions/server/projects|
+|POST|/tasks|Create task|<code>{ "description": "My new task", "projectId": "5c1591a080980742861d7ef6",	"userId": "5c1591a080980742861d7ef6",	"start": true, "includeInReport": true }</code>|http://localhost:9000/.netlify/functions/server/tasks|
+|PATCH|/tasks|Change task's state (running, paused, finished)|<code>{	"taskId": "5c1591a080980742861d7ef6",	"state": "finished" }</code>|http://localhost:9000/.netlify/functions/server/tasks|
+|GET|/users/:userId/projects|Get projects by user||http://localhost:9000/.netlify/functions/server/users/5c1591a080980742861d7ef6/projects|
+|GET|/users/:userId/tasks|Get tasks by user||http://localhost:9000/.netlify/functions/server/users/5c1591a080980742861d7ef6/tasks|
+|POST|/users/:userId/report|Get tasks report by user|<code>{ "start": "2019-01-01T06:00:00Z",	"end": "2019-02-01T06:00:00Z" }</code>|http://localhost:9000/.netlify/functions/server/users/5c1591a080980742861d7ef6/report|
 
 ## Hosting
 
