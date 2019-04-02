@@ -17,7 +17,7 @@
 > Base URL: http://localhost:9000/.netlify/functions/server
 
 |Verb| Route| Description| Request body example
-|:---|:-----|:-----------|:-------------|:--------------------|
+|:---|:-----|:-----------|:-------------|
 |POST|/users|User Sign up|<code>{ "email": "test@domain.com", "password": "testPassword" }</code>|
 |POST|/users/login|User Login|<code>{ "email": "test@domain.com",    "password": "testPassword" }</code>|
 |POST|/projects|Create project|<code>{ "name": "My new project",    "userId": "5c1591a080980742861d7ef6" }</code>|
