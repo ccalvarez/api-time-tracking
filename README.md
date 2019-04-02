@@ -2,7 +2,7 @@
 > Express.js RESTful API for logging and reporting daily tasks.
 
 - [Features](https://github.com/ccalvarez/api-time-tracking#features)
-- [API Description](https://github.com/ccalvarez/api-time-tracking#api-description)
+- [API description](https://github.com/ccalvarez/api-time-tracking#api-description)
 - [Hosting](https://github.com/ccalvarez/api-time-tracking#hosting)
 - [Environment variables](https://github.com/ccalvarez/api-time-tracking#environment-variables)
 - [Project setup](https://github.com/ccalvarez/api-time-tracking#project-setup)
