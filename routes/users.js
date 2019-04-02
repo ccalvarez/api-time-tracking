@@ -22,7 +22,7 @@ router.post(
     body('password')
       .trim()
       .isLength({ min: 5 })
-      .withMessage('Password inválido'),
+      .withMessage('Password debe tener al menos 5 caracteres alfanuméricos'),
   ],
   usersController.signUp
 );
