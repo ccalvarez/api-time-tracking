@@ -17,8 +17,8 @@
 
 |Verb| Route| Description| Request body example| Route example
 |:---|:-----|:-----------|:-------------|:--------------------|
-|POST|/users|User Sign up|<code>{ "email": "test@domain.com", "password": "test" }</code>|http://localhost:9000/.netlify/functions/server/users|
-|POST|/users/login|User Login|<code>{ "email": "test@domain.com",    "password": "test" }</code>|http://localhost:9000/.netlify/functions/server/users/login|
+|POST|/users|User Sign up|<code>{ "email": "test@domain.com", "password": "testPassword" }</code>|http://localhost:9000/.netlify/functions/server/users|
+|POST|/users/login|User Login|<code>{ "email": "test@domain.com",    "password": "testPassword" }</code>|http://localhost:9000/.netlify/functions/server/users/login|
 |POST|/projects|Create project|<code>{ "name": "My new project",    "userId": "5c1591a080980742861d7ef6" }</code>|http://localhost:9000/.netlify/functions/server/projects|
 |POST|/tasks|Create task|<code>{ "description": "My new task", "projectId": "5c1591a080980742861d7ef6",	"userId": "5c1591a080980742861d7ef6",	"start": true, "includeInReport": true }</code>|http://localhost:9000/.netlify/functions/server/tasks|
 |PATCH|/tasks|Change task's state (running, paused, finished)|<code>{	"taskId": "5c1591a080980742861d7ef6",	"state": "finished" }</code>|http://localhost:9000/.netlify/functions/server/tasks|
