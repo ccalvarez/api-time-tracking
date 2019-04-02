@@ -1,53 +1,55 @@
-require('dotenv').config();
+// Con Netlify Lambda Functions, el entry point ahora es: /express/server.js
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+// require('dotenv').config();
 
-const usersRoutes = require('./routes/users');
-const projectsRoutes = require('./routes/projects');
-const tasksRoutes = require('./routes/tasks');
+// const express = require('express');
+// const bodyParser = require('body-parser');
+// const mongoose = require('mongoose');
 
-const app = express();
+// const usersRoutes = require('./routes/users');
+// const projectsRoutes = require('./routes/projects');
+// const tasksRoutes = require('./routes/tasks');
 
-app.use(bodyParser.json());
+// const app = express();
 
-app.use((req, res, next) => {
-  const allowedOrigins = ['https://s.codepen.io', 'http://localhost:8081'];
-  const origin = req.headers.origin;
+// app.use(bodyParser.json());
 
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
+// app.use((req, res, next) => {
+//   const allowedOrigins = ['https://s.codepen.io', 'http://localhost:8081'];
+//   const origin = req.headers.origin;
 
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET, POST, PUT, PATCH, DELETE'
-  );
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
+//   if (allowedOrigins.includes(origin)) {
+//     res.setHeader('Access-Control-Allow-Origin', origin);
+//   }
 
-app.use('/users', usersRoutes);
-app.use('/projects', projectsRoutes);
-app.use('/tasks', tasksRoutes);
+//   res.setHeader(
+//     'Access-Control-Allow-Methods',
+//     'GET, POST, PUT, PATCH, DELETE'
+//   );
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   next();
+// });
 
-app.use((error, req, res, next) => {
-  const status = error.statusCode || 500;
-  const message = error.message;
-  res.status(status).json({ error: error.statusCode, message: message });
-});
+// app.use('/users', usersRoutes);
+// app.use('/projects', projectsRoutes);
+// app.use('/tasks', tasksRoutes);
 
-mongoose
-  .connect(
-    process.env.DATABASE,
-    { useCreateIndex: true, useNewUrlParser: true }
-  )
-  .then(result => {
-    app.listen(process.env.PORT, () => {
-      console.log(`Time Tracking API listening on port ${process.env.PORT}...`);
-    });
-  })
-  .catch(err => {
-    console.log(err);
-  });
+// app.use((error, req, res, next) => {
+//   const status = error.statusCode || 500;
+//   const message = error.message;
+//   res.status(status).json({ error: error.statusCode, message: message });
+// });
+
+// mongoose
+//   .connect(
+//     process.env.DATABASE,
+//     { useCreateIndex: true, useNewUrlParser: true }
+//   )
+//   .then(result => {
+//     app.listen(process.env.PORT, () => {
+//       console.log(`Time Tracking API listening on port ${process.env.PORT}...`);
+//     });
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });
