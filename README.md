@@ -34,7 +34,10 @@
 ## Environment variables
 
 This application uses the [Dotenv](https://www.npmjs.com/package/dotenv) npm package to load environment variables.
-To run the application, copy the `.env.copy` file as `.env` and edit the latter to set appropriate values for the environment variables.
+To run the application you have to:
+
+- Copy the `.env.copy` file as `.env`
+- Edit the `.env` file to set the values for the environment variables
 
 ## Project setup
 ```
