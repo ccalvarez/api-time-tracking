@@ -77,7 +77,6 @@ exports.login = (req, res, next) => {
         },
         process.env.JWT_SECRET
       );
-      res.set('Access-Control-Allow-Credentials', 'true');
       res
         .cookie('jwt', token, {
           domain: 'netlify.com',
