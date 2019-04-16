@@ -77,7 +77,13 @@ exports.login = (req, res, next) => {
         },
         process.env.JWT_SECRET
       );
-
+      res.cookie('jwt', token, {
+        domain: 'netlify.com',
+        path: '/',
+        expires: date,
+        secure: true,
+        httpOnly: true,
+      });
       res.status(200).send({ token: token });
     })
     .catch(err => {
