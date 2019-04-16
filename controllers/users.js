@@ -83,7 +83,7 @@ exports.login = (req, res, next) => {
           path: '/',
           expires: date,
           secure: true,
-          httpOnly: false,
+          httpOnly: true,
         })
         .status(200)
         .send({ token: token });
