@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 
 const tasksController = require('../controllers/tasks');
 
+const isAuth = require('../middleware/isAuth.js');
+
 const router = express.Router();
 
 // POST /tasks
@@ -55,6 +57,7 @@ router.post(
       .withMessage('Indicador de inicio de la tarea es requerido')
       .isBoolean()
       .withMessage('Indicador de inicio de la tarea debe ser Boolean'),
+    isAuth,
   ],
   tasksController.createTask
 );
@@ -78,6 +81,7 @@ router.patch(
       .trim()
       .isIn(['running', 'paused', 'finished'])
       .withMessage('Estado de la tarea no es válido'),
+    isAuth,
   ],
   tasksController.editTask
 );

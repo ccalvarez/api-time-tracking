@@ -41,6 +41,7 @@ router.get(
         }
         return true;
       }),
+    isAuth,
   ],
   tasksController.getTasksByUser
 );
@@ -71,6 +72,7 @@ router.post(
       .withMessage('Fecha de fin es requerida')
       .isISO8601()
       .withMessage('Fecha de fin no tiene un formato válido'),
+    isAuth,
   ],
   tasksController.getReportByUser
 );

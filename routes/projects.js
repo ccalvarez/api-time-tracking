@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 
 const projectsController = require('../controllers/projects');
 
+const isAuth = require('../middleware/isAuth.js');
+
 const router = express.Router();
 
 // POST /projects
@@ -28,6 +30,7 @@ router.post(
         }
         return true;
       }),
+    isAuth,
   ],
   projectsController.createProject
 );
