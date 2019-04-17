@@ -8,6 +8,8 @@ const usersController = require('../controllers/users');
 const tasksController = require('../controllers/tasks');
 const projectsController = require('../controllers/projects');
 
+const isAuth = require('../middleware/isAuth.js');
+
 const router = express.Router();
 
 // POST /users
@@ -85,6 +87,7 @@ router.get(
         }
         return true;
       }),
+    isAuth,
   ],
   projectsController.getProjectsByUser
 );
