@@ -1,6 +1,9 @@
 # api-time-tracking
 > Express.js RESTful API for logging and reporting daily tasks.
 
+Note: I'm planning to migrate this API to a Hasura backend.
+
+
 - [Features](https://github.com/ccalvarez/api-time-tracking#features)
 - [API description](https://github.com/ccalvarez/api-time-tracking#api-description)
 - [Hosting](https://github.com/ccalvarez/api-time-tracking#hosting)
@@ -11,7 +14,7 @@
 
 - [Express](https://expressjs.com/)
 - [Mongoose](https://mongoosejs.com/)
-- [JSON Web Tokens](https://jwt.io/)
+- [JSON Web Tokens](https://jwt.io/) (work in progress)
 
 ## API description
 > Base URL: http://localhost:9000/.netlify/functions/server
