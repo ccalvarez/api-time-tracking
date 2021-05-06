@@ -280,7 +280,7 @@ exports.getReportByUser = (req, res, next) => {
         { includeInReport: true },
       ],
     })
-      .sort({ "intervals.start": -1 })
+      .sort({ "intervals.start": 1 })
       .populate("project")
       .then((result) => {
         let groupedIntervals = [];
