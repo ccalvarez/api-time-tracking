@@ -1,6 +1,6 @@
-const { validationResult } = require('express-validator/check');
-const mongoose = require('mongoose');
-const TaskModel = require('../models/task');
+const { validationResult } = require("express-validator/check");
+const mongoose = require("mongoose");
+const TaskModel = require("../models/task");
 
 exports.createTask = (req, res, next) => {
   const errors = validationResult(req);
@@ -16,7 +16,7 @@ exports.createTask = (req, res, next) => {
       intervals: req.body.start ? { start: new Date(), end: null } : [],
       delayReason: req.body.delayReason,
       comments: req.body.comments,
-      state: req.body.start ? 'running' : 'pending',
+      state: req.body.start ? "running" : "pending",
       includeInReport: req.body.includeInReport,
       project: req.body.projectId,
       user: req.body.userId,
@@ -24,7 +24,7 @@ exports.createTask = (req, res, next) => {
 
     task
       .save()
-      .then(result => {
+      .then((result) => {
         res
           .status(201)
           .json(
@@ -33,7 +33,7 @@ exports.createTask = (req, res, next) => {
               : { _id: result._id }
           );
       })
-      .catch(err => {
+      .catch((err) => {
         if (!err.statusCode) {
           err.statusCode = 500;
           // if (err.message.toLowerCase().includes('duplicate')) {
@@ -65,16 +65,16 @@ exports.editTask = (req, res, next) => {
 
   try {
     let task = TaskModel.findById(new mongoose.Types.ObjectId(req.body.taskId))
-      .then(result => {
+      .then((result) => {
         if (result) {
-          if (req.body.state == 'paused') {
-            if (result.state != 'running') {
+          if (req.body.state == "paused") {
+            if (result.state != "running") {
               res
                 .status(409)
-                .send({ error: 409, message: 'La tarea no está en ejecución' });
+                .send({ error: 409, message: "La tarea no está en ejecución" });
             } else {
               const lastIntervalStart = Math.max(
-                ...result.intervals.map(interval => {
+                ...result.intervals.map((interval) => {
                   return interval.start;
                 })
               );
@@ -83,59 +83,59 @@ exports.editTask = (req, res, next) => {
               TaskModel.update(
                 {
                   _id: result._id,
-                  'intervals.start': new Date(lastIntervalStart),
+                  "intervals.start": new Date(lastIntervalStart),
                 },
                 {
-                  $set: { state: 'paused', 'intervals.$.end': lastIntervalEnd },
+                  $set: { state: "paused", "intervals.$.end": lastIntervalEnd },
                 },
                 { runValidators: true }
               )
-                .then(updated => {
+                .then((updated) => {
                   res.status(200).json({ end: lastIntervalEnd });
                 })
-                .catch(err => {
+                .catch((err) => {
                   if (!err.statusCode) {
                     err.statusCode = 500;
                     next(err);
                   }
                 });
             }
-          } else if (req.body.state == 'running') {
-            if (result.state != 'paused' && result.state != 'pending') {
+          } else if (req.body.state == "running") {
+            if (result.state != "paused" && result.state != "pending") {
               res.status(409).send({
                 error: 409,
-                message: 'La tarea no está pausada ni pendiente',
+                message: "La tarea no está pausada ni pendiente",
               });
             } else {
               const newIntervalStart = new Date();
               result.intervals.push({ start: newIntervalStart, end: null });
-              result.state = 'running';
+              result.state = "running";
               result
                 .save()
-                .then(updated => {
+                .then((updated) => {
                   res.status(200).json({ start: newIntervalStart });
                 })
-                .catch(err => {
+                .catch((err) => {
                   if (!err.statusCode) {
                     err.statusCode = 500;
                     next(err);
                   }
                 });
             }
-          } else if (req.body.state == 'finished') {
-            if (result.state != 'running' && result.state != 'paused') {
+          } else if (req.body.state == "finished") {
+            if (result.state != "running" && result.state != "paused") {
               res.status(409).send({
                 error: 409,
-                message: 'La tarea no está en ejecución ni pausada',
+                message: "La tarea no está en ejecución ni pausada",
               });
             } else {
               const lastIntervalStart = Math.max(
-                ...result.intervals.map(interval => {
+                ...result.intervals.map((interval) => {
                   return interval.start;
                 })
               );
 
-              const lastInterval = Array.from(result.intervals).find(i => {
+              const lastInterval = Array.from(result.intervals).find((i) => {
                 return (
                   i.start.toISOString() ==
                   new Date(lastIntervalStart).toISOString()
@@ -150,20 +150,20 @@ exports.editTask = (req, res, next) => {
                 TaskModel.update(
                   {
                     _id: result._id,
-                    'intervals.start': new Date(lastIntervalStart),
+                    "intervals.start": new Date(lastIntervalStart),
                   },
                   {
                     $set: {
-                      state: 'finished',
-                      'intervals.$.end': lastIntervalEnd,
+                      state: "finished",
+                      "intervals.$.end": lastIntervalEnd,
                     },
                   },
                   { runValidators: true }
                 )
-                  .then(updated => {
+                  .then((updated) => {
                     res.status(200).json({ end: lastIntervalEnd });
                   })
-                  .catch(err => {
+                  .catch((err) => {
                     if (!err.statusCode) {
                       err.statusCode = 500;
                       next(err);
@@ -176,14 +176,14 @@ exports.editTask = (req, res, next) => {
                     _id: result._id,
                   },
                   {
-                    $set: { state: 'finished' },
+                    $set: { state: "finished" },
                   },
                   { runValidators: true }
                 )
-                  .then(updated => {
+                  .then((updated) => {
                     res.status(200).send();
                   })
-                  .catch(err => {
+                  .catch((err) => {
                     if (!err.statusCode) {
                       err.statusCode = 500;
                       next(err);
@@ -194,16 +194,16 @@ exports.editTask = (req, res, next) => {
           } else {
             res.status(400).send({
               error: 400,
-              message: 'Estado de la tarea no es válido',
+              message: "Estado de la tarea no es válido",
             });
           }
 
           // qué hace si no envían ningún campo a actualizar?
         } else {
-          res.status(404).send({ error: 404, message: 'La tarea no existe' });
+          res.status(404).send({ error: 404, message: "La tarea no existe" });
         }
       })
-      .catch(err => {
+      .catch((err) => {
         if (!err.statusCode) {
           err.statusCode = 500;
           next(err);
@@ -227,11 +227,11 @@ exports.getTasksByUser = (req, res, next) => {
 
   try {
     TaskModel.find({ user: new mongoose.Types.ObjectId(req.params.userId) })
-      .populate('project')
-      .then(result => {
+      .populate("project")
+      .then((result) => {
         res.status(200).json(result);
       })
-      .catch(err => {
+      .catch((err) => {
         if (!err.statusCode) {
           err.statusCode = 500;
           next(err);
@@ -263,27 +263,29 @@ exports.getReportByUser = (req, res, next) => {
         { user: userId },
         {
           $or: [
-            { 'intervals.start': { $gte: start, $lt: end } },
+            { "intervals.start": { $gte: start, $lt: end } },
             {
               $and: [
-                { 'intervals.start': { $lt: start } },
+                { "intervals.start": { $lt: start } },
                 {
                   $or: [
-                    { 'intervals.end': null },
-                    { 'intervals.end': { $gte: start } },
+                    { "intervals.end": null },
+                    { "intervals.end": { $gte: start } },
                   ],
                 },
               ],
             },
           ],
         },
+        { includeInReport: true },
       ],
     })
-      .populate('project')
-      .then(result => {
+      .sort({ "intervals.start": -1 })
+      .populate("project")
+      .then((result) => {
         let groupedIntervals = [];
 
-        const tasks = result.map(task => {
+        const tasks = result.map((task) => {
           const description = task.description;
           const project = task.project.name;
 
@@ -291,13 +293,10 @@ exports.getReportByUser = (req, res, next) => {
 
           let dailyAccumulator = 0;
           let day = [
-            start
-              .getDate()
-              .toString()
-              .padStart(2, '0'),
-            (start.getMonth() + 1).toString().padStart(2, '0'),
+            start.getDate().toString().padStart(2, "0"),
+            (start.getMonth() + 1).toString().padStart(2, "0"),
             start.getFullYear().toString(),
-          ].join('/');
+          ].join("/");
 
           const totalTime = task.intervals
             .sort((a, b) => {
@@ -310,10 +309,10 @@ exports.getReportByUser = (req, res, next) => {
                   new Date(currentValue.start)
                     .getDate()
                     .toString()
-                    .padStart(2, '0'),
-                  (start.getMonth() + 1).toString().padStart(2, '0'),
+                    .padStart(2, "0"),
+                  (start.getMonth() + 1).toString().padStart(2, "0"),
                   start.getFullYear().toString(),
-                ].join('/') != day
+                ].join("/") != day
               ) {
                 dailyAccumulator = 0;
               }
@@ -331,10 +330,10 @@ exports.getReportByUser = (req, res, next) => {
                 new Date(currentValue.start)
                   .getDate()
                   .toString()
-                  .padStart(2, '0'),
-                (start.getMonth() + 1).toString().padStart(2, '0'),
+                  .padStart(2, "0"),
+                (start.getMonth() + 1).toString().padStart(2, "0"),
                 start.getFullYear().toString(),
-              ].join('/');
+              ].join("/");
 
               return currentValue.accumulatedTime;
             }, 0);
@@ -345,18 +344,15 @@ exports.getReportByUser = (req, res, next) => {
           let minutes;
           let intervalDuration;
 
-          /*return*/ task.intervals.map(interval => {
+          /*return*/ task.intervals.map((interval) => {
             const start = new Date(interval.start);
             const end = new Date(interval.end);
             const intervalTime = interval.dailyAccumulatedTime;
             const date = [
-              start
-                .getDate()
-                .toString()
-                .padStart(2, '0'),
-              (start.getMonth() + 1).toString().padStart(2, '0'),
+              start.getDate().toString().padStart(2, "0"),
+              (start.getMonth() + 1).toString().padStart(2, "0"),
               start.getFullYear().toString(),
-            ].join('/');
+            ].join("/");
 
             hoursWithDecimals = intervalTime / 3600000;
             hours = Math.floor(hoursWithDecimals);
@@ -364,8 +360,8 @@ exports.getReportByUser = (req, res, next) => {
             minutes = roundToZero(minutesInDecimals * 60);
             intervalDuration = hours
               .toString()
-              .padStart(2, '0')
-              .concat(':', minutes.toString().padStart(2, '0'));
+              .padStart(2, "0")
+              .concat(":", minutes.toString().padStart(2, "0"));
 
             // return {
             //   start: start.toGMTString(),
@@ -380,7 +376,7 @@ exports.getReportByUser = (req, res, next) => {
             //     (interval.accumulatedTime * 100) / totalTime,
             // };
             const found = groupedIntervals.find(
-              i => i.description === description && i.date === date
+              (i) => i.description === description && i.date === date
             );
             if (!found) {
               groupedIntervals.push({
@@ -400,8 +396,8 @@ exports.getReportByUser = (req, res, next) => {
               minutes = roundToZero(minutesInDecimals * 60);
               intervalDuration = hours
                 .toString()
-                .padStart(2, '0')
-                .concat(':', minutes.toString().padStart(2, '0'));
+                .padStart(2, "0")
+                .concat(":", minutes.toString().padStart(2, "0"));
               found.intervalDuration = intervalDuration;
               found.intervalAccumulatedPercentage = roundToZero(
                 (interval.accumulatedTime * 100) / totalTime
@@ -411,12 +407,12 @@ exports.getReportByUser = (req, res, next) => {
         }); // TODO: agregar aquí un sort para que los intervalos se ordenen estrictamente por start
 
         groupedIntervals = groupedIntervals
-          .filter(i => i.start >= start && i.start <= end)
+          .filter((i) => i.start >= start && i.start <= end)
           .sort((a, b) => a.start - b.start);
         // const agrupado = new Set(tasks);
         res.status(200).json(groupedIntervals);
       })
-      .catch(err => {
+      .catch((err) => {
         if (!err.statusCode) {
           err.statusCode = 500;
           next(err);
@@ -431,9 +427,9 @@ exports.getReportByUser = (req, res, next) => {
 };
 
 function roundToTwo(num) {
-  return +(Math.round(num + 'e+2') + 'e-2');
+  return +(Math.round(num + "e+2") + "e-2");
 }
 
 function roundToZero(num) {
-  return +(Math.round(num + 'e+0') + 'e-0');
+  return +(Math.round(num + "e+0") + "e-0");
 }
