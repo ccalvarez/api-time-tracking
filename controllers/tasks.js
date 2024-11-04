@@ -383,9 +383,9 @@ exports.getReportByUser = (req, res, next) => {
                 date,
                 description,
                 intervalDuration,
-                intervalAccumulatedPercentage: roundToZero(
+                intervalAccumulatedPercentage: `${roundToZero(
                   (interval.accumulatedTime * 100) / totalTime
-                ),
+                )}%`,
                 project,
               });
             } else {
@@ -398,9 +398,9 @@ exports.getReportByUser = (req, res, next) => {
                 .padStart(2, "0")
                 .concat(":", minutes.toString().padStart(2, "0"));
               found.intervalDuration = intervalDuration;
-              found.intervalAccumulatedPercentage = roundToZero(
+              found.intervalAccumulatedPercentage = `${roundToZero(
                 (interval.accumulatedTime * 100) / totalTime
-              );
+              )}%`;
             }
           });
         }); // TODO: agregar aquí un sort para que los intervalos se ordenen estrictamente por start
