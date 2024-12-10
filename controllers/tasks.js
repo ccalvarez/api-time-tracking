@@ -362,18 +362,6 @@ exports.getReportByUser = (req, res, next) => {
               .padStart(2, "0")
               .concat(":", minutes.toString().padStart(2, "0"));
 
-            // return {
-            //   start: start.toGMTString(),
-            //   end: end.toGMTString(),
-            // date,
-            //   description,
-            //   project,
-            //   totalTime,
-            //   intervalTime,
-            //   intervalPercentage: (intervalTime * 100) / totalTime,
-            //   intervalAccumulatedPercentage:
-            //     (interval.accumulatedTime * 100) / totalTime,
-            // };
             const found = groupedIntervals.find(
               (i) => i.description === description && i.date === date
             );
@@ -383,9 +371,14 @@ exports.getReportByUser = (req, res, next) => {
                 date,
                 description,
                 intervalDuration,
-                intervalAccumulatedPercentage: `${roundToZero(
-                  (interval.accumulatedTime * 100) / totalTime
-                )}%`,
+                intervalAccumulatedPercentage: [
+                  "Reviso y atiendo correo institucional",
+                  "Registro tareas en informe de labores",
+                ].includes(description)
+                  ? "100%"
+                  : `${roundToZero(
+                      (interval.accumulatedTime * 100) / totalTime
+                    )}%`,
                 project,
               });
             } else {
@@ -398,9 +391,14 @@ exports.getReportByUser = (req, res, next) => {
                 .padStart(2, "0")
                 .concat(":", minutes.toString().padStart(2, "0"));
               found.intervalDuration = intervalDuration;
-              found.intervalAccumulatedPercentage = `${roundToZero(
-                (interval.accumulatedTime * 100) / totalTime
-              )}%`;
+              found.intervalAccumulatedPercentage = [
+                "Reviso y atiendo correo institucional",
+                "Registro tareas en informe de labores",
+              ].includes(description)
+                ? "100%"
+                : `${roundToZero(
+                    (interval.accumulatedTime * 100) / totalTime
+                  )}%`;
             }
           });
         }); // TODO: agregar aquí un sort para que los intervalos se ordenen estrictamente por start
