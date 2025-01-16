@@ -26,7 +26,7 @@
     "express": "^4.16.4",
     "express-validator": "^5.3.0",
     "jsonwebtoken": "^8.4.0",
-    "mongoose": "^5.13.17",
+    "mongoose": "^8.9.5",
     "mongoose-hidden": "^1.9.1",
     "mongoose-id-validator": "^0.5.4",
     "serverless-http": "^1.8.0"
