@@ -374,6 +374,8 @@ exports.getReportByUser = (req, res, next) => {
                 intervalAccumulatedPercentage: [
                   "Reviso y atiendo correo institucional",
                   "Registro tareas en informe de labores",
+                  "modalidad de asistencia",
+                  "Programación de tareas",
                 ].includes(description)
                   ? "100%"
                   : `${roundToZero(
