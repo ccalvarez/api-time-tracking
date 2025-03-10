@@ -377,6 +377,7 @@ exports.getReportByUser = (req, res, next) => {
                   "modalidad de asistencia",
                   "Programación de tareas",
                   "Justificación de marca en la intranet",
+                  "Se atiende consultas de Yasser Alfaro",
                 ].includes(description)
                   ? "100%"
                   : `${roundToZero(
