@@ -376,6 +376,7 @@ exports.getReportByUser = (req, res, next) => {
                   "Registro tareas en informe de labores",
                   "modalidad de asistencia",
                   "Programación de tareas",
+                  "Justificación de marca en la intranet",
                 ].includes(description)
                   ? "100%"
                   : `${roundToZero(
