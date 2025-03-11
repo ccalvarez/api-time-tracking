@@ -23,10 +23,10 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "dotenv": "^6.1.0",
-    "express": "^4.16.4",
+    "express": "^4.21.2",
     "express-validator": "^5.3.0",
     "jsonwebtoken": "^8.4.0",
-    "mongoose": "^5.13.17",
+    "mongoose": "^6.13.6",
     "mongoose-hidden": "^1.9.1",
     "mongoose-id-validator": "^0.5.4",
     "serverless-http": "^1.8.0"
