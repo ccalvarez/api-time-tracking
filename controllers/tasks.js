@@ -288,8 +288,6 @@ exports.getReportByUser = (req, res, next) => {
           const description = task.description;
           const project = task.project.name;
 
-          // TODO: optimizar, hacer sólo un reduce o sólo un map:
-
           let dailyAccumulator = 0;
           let day = [
             start.getDate().toString().padStart(2, "0"),
@@ -299,7 +297,6 @@ exports.getReportByUser = (req, res, next) => {
 
           const totalTime = task.intervals
             .sort((a, b) => {
-              // TODO: hacer este ordenamiento en base de datos
               return a.start - b.start;
             })
             .reduce((accumulator, currentValue) => {
@@ -343,7 +340,7 @@ exports.getReportByUser = (req, res, next) => {
           let minutes;
           let intervalDuration;
 
-          /*return*/ task.intervals.map((interval) => {
+          task.intervals.map((interval) => {
             const start = new Date(interval.start);
             const end = new Date(interval.end);
             const intervalTime = interval.dailyAccumulatedTime;
@@ -405,12 +402,42 @@ exports.getReportByUser = (req, res, next) => {
                   )}%`;
             }
           });
-        }); // TODO: agregar aquí un sort para que los intervalos se ordenen estrictamente por start
+        });
+
+        // Agregar días no hábiles (fines de semana)
+        const currentDate = new Date(start);
+        while (currentDate <= end) {
+          const dayOfWeek = currentDate.getDay();
+          // 0 es domingo, 6 es sábado
+          if (dayOfWeek === 0 || dayOfWeek === 6) {
+            const date = [
+              currentDate.getDate().toString().padStart(2, "0"),
+              (currentDate.getMonth() + 1).toString().padStart(2, "0"),
+              currentDate.getFullYear().toString(),
+            ].join("/");
+
+            // Solo agregar si no existe ya una entrada para esta fecha
+            const dateExists = groupedIntervals.some(
+              (interval) => interval.date === date
+            );
+            if (!dateExists) {
+              groupedIntervals.push({
+                start: new Date(currentDate),
+                date,
+                description: "Fin de semana no trabajable",
+              });
+            }
+          }
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
 
         groupedIntervals = groupedIntervals
-          .filter((i) => i.start >= start && i.start <= end)
-          .sort((a, b) => a.start - b.start);
-        // const agrupado = new Set(tasks);
+          .filter((i) => {
+            const intervalDate = new Date(i.start);
+            return intervalDate >= start && intervalDate <= end;
+          })
+          .sort((a, b) => new Date(a.start) - new Date(b.start));
+
         res.status(200).json(groupedIntervals);
       })
       .catch((err) => {
