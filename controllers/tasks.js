@@ -375,6 +375,7 @@ exports.getReportByUser = (req, res, next) => {
                   "Programación de tareas",
                   "Justificación de marca en la intranet",
                   "Se atiende consultas de Yasser Alfaro",
+                  "Asignación de permisos a compañeros en Azure DevOps"
                 ].includes(description)
                   ? "100%"
                   : `${roundToZero(
